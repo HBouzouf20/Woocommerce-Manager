@@ -1,10 +1,12 @@
 package com.hbdev.woocommerce_manager.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hbdev.woocommerce_manager.exceptions.ElementNotFoundException;
 import com.hbdev.woocommerce_manager.helpers.AppConstants;
 import com.hbdev.woocommerce_manager.helpers.Tools;
 import com.hbdev.woocommerce_manager.helpers.ZipHelper;
 import com.hbdev.woocommerce_manager.models.Product;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Implementation of the ProductService that uses a cache and FileHelper to load product data.
  */
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -124,7 +127,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findByImageUrl(String imageUrl) {
-        return getAllProducts().stream().filter(p -> p.getImageUrl().contains(imageUrl)).findFirst().orElse(null);
+        return getAllProducts()
+                .stream()
+                .filter(p -> p.getImageUrl().toLowerCase().contains(imageUrl.toLowerCase()))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -144,12 +151,13 @@ public class ProductServiceImpl implements ProductService {
             File zipPath = new ClassPathResource(PRODUCT_FOLDER_PATH).getFile();
             Map<String, byte[]> data = ZipHelper.readFilesFromZip(zipPath.getPath());
             List<Product> products = new ArrayList<>();
+            log.warn("Inject products from cache !");
             data.forEach((key, value) -> {
                 if (key.contains("json")) {
                     try {
-                        Path filePath = Path.of(key);
                         Product product = objectMapper.readValue(value, Product.class);
                         //System.out.println("Image = " + product.getImageUrl());
+                        System.out.println(product);
                         products.add(product);
                     } catch (IOException e) {
                         throw new RuntimeException(e);

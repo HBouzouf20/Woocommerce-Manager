@@ -12,6 +12,7 @@ import com.hbdev.woocommerce_manager.services.ProductService;
 import com.hbdev.woocommerce_manager.services.WooCommerceProductService;
 import com.hbdev.woocommerce_manager.services.WordpressService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class Runner implements CommandLineRunner {
     private final WooCommerceProductService wooCommerceProductService;
     private final WordpressService wordpressService;
@@ -40,12 +42,12 @@ public class Runner implements CommandLineRunner {
         WooCommerceConnection connection = WooCommerceConnection.builder()
                 .baseUrl(AppConstants.BASE_URL)
                 .consumerKey("ck_f21dded9be5abe09d8159fea49c91fadbb276d0b")
-                .consumerSecret("cs_4c3534f286025ecb6a71e68ab0b1a5d2b7c69e89")
+                .consumerSecret("cs_df3a82062e55a674d1f9c8efdbce02ad78cba7fe")
                 .build();
 
         WordpressConnection wordpressConnection = WordpressConnection.builder()
                 .username("treasortv@gmail.com")
-                .password("l3nb ARYV YSuS FHaD Kcue PbUx")
+                .password("JW6%0zD56Qm64U%vo*s46^FO")
                 .build();
         wooCommerceProductService.connection(connection);
         wordpressService.connection(wordpressConnection);
@@ -54,16 +56,23 @@ public class Runner implements CommandLineRunner {
         File zipPath = new ClassPathResource(AppConstants.PRODUCT_FOLDER_PATH).getFile();
         Map<String, byte[]> data = ZipHelper.readFilesFromZip(zipPath.getPath());
         data.forEach((key, value) -> {
-            if (key.contains("jpg")) {
+            if (key.contains("jpg")|| key.contains(".png") || key.contains("jpeg") || key.contains("gif")) {
                 try {
                     String fileName = String.valueOf(Path.of(key).getFileName());
                     String imageUrl = wordpressService.uploadImage(value, fileName);
+                    log.info("Image uploaded: {}", imageUrl);
                     Product product = productService.findByImageUrl(fileName);
-                    product.setImageUrl(imageUrl);
-                    productService.updateProduct(product.getName(), product);
-                    System.out.println("product = " + product);
-                    wooCommerceProductService.create(ProductMapper.mapToWooCommerceProduct(product));
-                } catch (Exception e) {
+                    log.warn("Injection of product : {}", product != null ? product.getName() : null);
+                    if (product != null) {
+                        log.info("Product found: {}", product);
+                        product.setImageUrl(imageUrl);
+                        productService.updateProduct(product.getName(), product);
+                        System.out.println("product = " + product);
+                        wooCommerceProductService.create(ProductMapper.mapToWooCommerceProduct(product));
+
+                    }
+                                   } catch (Exception e) {
+                    System.out.println(e.getMessage());
                     throw new RuntimeException(e);
                 }
             }

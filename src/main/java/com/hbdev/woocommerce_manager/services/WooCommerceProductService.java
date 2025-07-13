@@ -21,7 +21,7 @@ public class WooCommerceProductService {
     public void connection(WooCommerceConnection connection) {
         wooCommerceService.connection(connection);
     }
-    public void insertProducts() {
+/*    public void insertProducts() {
         productService.getAllProducts().forEach(product -> {
             try {
                 this.create(ProductMapper.mapToWooCommerceProduct(product));
@@ -29,7 +29,7 @@ public class WooCommerceProductService {
                 throw new RuntimeException(e);
             }
         });
-    }
+    }*/
 
     public void create(WooCommerceProduct product)  {
         // Implement logic to create a product in WooCommerce via API

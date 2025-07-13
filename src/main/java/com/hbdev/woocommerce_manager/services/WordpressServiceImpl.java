@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hbdev.woocommerce_manager.helpers.AppConstants;
 import com.hbdev.woocommerce_manager.models.WordpressConnection;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class WordpressServiceImpl implements WordpressService {
     private WordpressConnection connection;
     private static final  String MEDIA_ENDPOINT = AppConstants.MEDIA_ENDPOINT;
@@ -50,7 +52,7 @@ public class WordpressServiceImpl implements WordpressService {
             try (InputStream inputStream = connection.getInputStream()) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, Object> responseJson = objectMapper.readValue(inputStream, Map.class);
-                System.out.println("Upload successful. Image URL: " + responseJson.get("source_url"));
+                log.info("Upload successful. Image URL: {}", responseJson.get("source_url"));
                 return String.valueOf(responseJson.get("source_url"));
             }
         } else {

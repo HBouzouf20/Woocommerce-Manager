@@ -26,6 +26,8 @@ public class ProductMapper {
                 .manageStock(true) // Assuming stock management is enabled by default
                 .stockQuantity(100) // Default stock quantity (can be set based on business rules)
                 .images(List.of(Map.of("src", product.getImageUrl())))
+                .categories(List.of(product.getCategory()).toArray(new String[0]))
+
                 .build();
     }
     public static BigDecimal parsePriceToBigDecimal(String price) {
