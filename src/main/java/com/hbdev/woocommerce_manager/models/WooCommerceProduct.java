@@ -50,7 +50,7 @@ public class WooCommerceProduct {
     private String type;
 
     @JsonProperty("categories")
-    private String[] categories;
+    private Category[] categories;
 
     @JsonProperty("images")
     private List<Map<String, String>> images;

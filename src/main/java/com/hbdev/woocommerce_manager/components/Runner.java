@@ -41,8 +41,8 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         WooCommerceConnection connection = WooCommerceConnection.builder()
                 .baseUrl(AppConstants.BASE_URL)
-                .consumerKey("ck_f21dded9be5abe09d8159fea49c91fadbb276d0b")
-                .consumerSecret("cs_df3a82062e55a674d1f9c8efdbce02ad78cba7fe")
+                .consumerKey("ck_a26c7906433677d696ca90e65e8d6caae4b71a3d")
+                .consumerSecret("cs_24fae1d3b588157ba3a93cd2d41911207544e726")
                 .build();
 
         WordpressConnection wordpressConnection = WordpressConnection.builder()

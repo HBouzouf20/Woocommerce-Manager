@@ -37,7 +37,7 @@ public class WordpressServiceImpl implements WordpressService {
         // Add authentication and content headers
         Map<String, String> headers = this.connection.getMediaAuthHeaders();
         headers.forEach(connection::setRequestProperty);
-        connection.setRequestProperty("Content-Type", "image/jpg");
+        connection.setRequestProperty("Content-Type", "image/jpeg");
         connection.setRequestProperty("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
         // Upload the image
@@ -61,7 +61,7 @@ public class WordpressServiceImpl implements WordpressService {
                 if (errorStream != null) {
                     String errorResponse = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
                     System.out.println("Error response: " + errorResponse);
-                    throw new RuntimeException("Image upload failed. Response code: " + responseCode + ". Error: " + errorResponse);
+                    throw new RuntimeException("Image upload failed. Response code: " + responseCode );
                 }
             }
         }

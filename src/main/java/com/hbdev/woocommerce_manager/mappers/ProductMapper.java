@@ -1,5 +1,6 @@
 package com.hbdev.woocommerce_manager.mappers;
 
+import com.hbdev.woocommerce_manager.models.Category;
 import com.hbdev.woocommerce_manager.models.Product;
 import com.hbdev.woocommerce_manager.models.WooCommerceProduct;
 
@@ -26,7 +27,10 @@ public class ProductMapper {
                 .manageStock(true) // Assuming stock management is enabled by default
                 .stockQuantity(100) // Default stock quantity (can be set based on business rules)
                 .images(List.of(Map.of("src", product.getImageUrl())))
-                .categories(List.of(product.getCategory()).toArray(new String[0]))
+                .categories(new Category[]{new Category(50)})
+                .slug(product.getName().toLowerCase().replace(" ", "-"))
+                .shortDescription(product.getDescription())
+                .sku(product.getName())
 
                 .build();
     }
@@ -43,7 +47,7 @@ public class ProductMapper {
                 return BigDecimal.ZERO; // Default value in case of error
             }
         }
-        return BigDecimal.ZERO; // Default value if "DH" is not found
+        return BigDecimal.valueOf(1); // Default value if "DH" is not found
     }
     private static  String convertBigDecimalToString(BigDecimal price) {
         if (price != null) {
